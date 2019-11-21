@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.shadow.dao.system.RoleDao">
+
+    <resultMap id="BaseResultMap" type="com.shadow.bean.system.PeRole">
+        <id column="role_id" property="roleId"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+    </resultMap>
+    <insert id="save"  >
+        insert into pe_role (role_id, name, remark, order_no,company_id, company_name)
+        values (#{roleId}, #{name}, #{remark}, #{orderNo}, #{companyId}, #{companyName})
+    </insert>
+    <update id="update" >
+        update pe_role
+        set name = #{name},
+          remark = #{remark},
+          order_no = #{orderNo}
+        where role_id = #{roleId}
+    </update>
+    <delete id="delete">
+        delete from pe_role where role_id=#{roleId}
+    </delete>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select * from pe_role where role_id=#{roleId}
+    </select>
+    <select id="findAll" resultMap="BaseResultMap">
+        select  * from pe_role where company_id=#{companyId}
+    </select>
+
+
+</mapper>

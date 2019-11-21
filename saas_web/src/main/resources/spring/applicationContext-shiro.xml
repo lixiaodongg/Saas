@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <description>spring整合shiro</description>
+
+    <!--创建shiro过滤工厂,注入securityManager 对象-->
+    <bean class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" id="shiroFilter">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /css/** = anon
+                /img/** = anon
+                /make/** = anon
+                /plugins/** = anon
+                /login.jsp = anon
+                /login* = anon
+                /index.jsp = anon
+                /logout.do=logout
+                /**=authc
+            </value>
+        </property>
+    </bean>
+
+    <!--创建securityManager对象,注入realm-->
+    <bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
+        <property name="realm" ref="myRealm"/>
+    </bean>
+
+    <!--创建自定义的realm-->
+    <bean class="com.shadow.web.shiro.AuthRealm" id="myRealm">
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+    </bean>
+
+    <!--创建默认的凭证匹配器-->
+    <bean class="com.shadow.web.shiro.CustomerCredentialsMatcher" id="credentialsMatcher">
+    </bean>
+
+
+
+
+</beans>

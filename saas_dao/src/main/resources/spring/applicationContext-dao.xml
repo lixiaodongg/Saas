@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <description>数据源 + Spring整合MyBatis配置</description>
+
+    <!--加载配置文件-->
+    <context:property-placeholder location="classpath:properties/db.properties"/>
+
+    <!--1.数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+    </bean>
+
+    <!--2.Spring整合MyBatis配置(A)SessionSessionFactoryBean配置-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+
+        <!--
+        <property name="configLocation" value="指定SqlMapConfig.xml主配置文件路径"/>
+        <property name="mapperLocations" value="dao接口映射文件的路径"/>
+        <property name="typeAliasesPackage" value="扫描的包配置，自动对包下的类起别名"/>
+        -->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!--使用下面的方式配置参数，一行配置一个 -->
+                        <value>
+                            helperDialect=mysql
+                            reasonable=true
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!--3.Spring整合MyBatis配置(B)映射扫描配置-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--i: 自动加载类路径下指定路径的映射文件-->
+        <!--ii: 自动加载该目录下的接口文件，读取接口的注解。-->
+        <!--iii: 自动对该目录下所有的接口生产代理-->
+        <property name="basePackage" value="com.shadow.dao"/>
+    </bean>
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
